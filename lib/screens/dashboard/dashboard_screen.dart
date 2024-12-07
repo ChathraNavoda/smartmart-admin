@@ -1,23 +1,26 @@
-import 'components/dash_board_header.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+
 import '../../utility/constants.dart';
 import 'components/add_product_form.dart';
+import 'components/dash_board_header.dart';
 import 'components/order_details_section.dart';
 import 'components/product_list_section.dart';
 import 'components/product_summery_section.dart';
 
 class DashboardScreen extends StatelessWidget {
+  const DashboardScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: SingleChildScrollView(
         primary: false,
-        padding: EdgeInsets.all(defaultPadding),
+        padding: const EdgeInsets.all(defaultPadding),
         child: Column(
           children: [
-            DashBoardHeader(),
-            Gap(defaultPadding),
+            const DashBoardHeader(),
+            const Gap(defaultPadding),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -36,7 +39,7 @@ class DashboardScreen extends StatelessWidget {
                           ),
                           ElevatedButton.icon(
                             style: TextButton.styleFrom(
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                 horizontal: defaultPadding * 1.5,
                                 vertical: defaultPadding,
                               ),
@@ -44,26 +47,38 @@ class DashboardScreen extends StatelessWidget {
                             onPressed: () {
                               showAddProductForm(context, null);
                             },
-                            icon: Icon(Icons.add),
-                            label: Text("Add New"),
+                            icon: const Icon(
+                              Icons.add,
+                              color: Color.fromARGB(255, 66, 188, 205),
+                            ),
+                            label: const Text(
+                              "Add New",
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 66, 188, 205),
+                              ),
+                            ),
                           ),
-                          Gap(20),
+                          const Gap(20),
                           IconButton(
-                              onPressed: () {
-                                //TODO: should complete call getAllProduct
-                              },
-                              icon: Icon(Icons.refresh)),
+                            onPressed: () {
+                              //TODO: should complete call getAllProduct
+                            },
+                            icon: const Icon(
+                              Icons.refresh,
+                              color: Color.fromARGB(255, 66, 188, 205),
+                            ),
+                          ),
                         ],
                       ),
-                      Gap(defaultPadding),
-                      ProductSummerySection(),
-                      Gap(defaultPadding),
-                      ProductListSection(),
+                      const Gap(defaultPadding),
+                      const ProductSummerySection(),
+                      const Gap(defaultPadding),
+                      const ProductListSection(),
                     ],
                   ),
                 ),
-                SizedBox(width: defaultPadding),
-                Expanded(
+                const SizedBox(width: defaultPadding),
+                const Expanded(
                   flex: 2,
                   child: OrderDetailsSection(),
                 ),

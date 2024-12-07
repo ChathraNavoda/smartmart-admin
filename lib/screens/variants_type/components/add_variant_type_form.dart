@@ -1,8 +1,8 @@
-import '../../../models/variant_type.dart';
-import '../../../utility/extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+
+import '../../../models/variant_type.dart';
 import '../../../utility/constants.dart';
+import '../../../utility/extensions.dart';
 import '../../../widgets/custom_text_field.dart';
 
 class VariantTypeSubmitForm extends StatelessWidget {
@@ -18,7 +18,7 @@ class VariantTypeSubmitForm extends StatelessWidget {
       child: Form(
         key: context.variantTypeProvider.addVariantsTypeFormKey,
         child: Container(
-          padding: EdgeInsets.all(defaultPadding),
+          padding: const EdgeInsets.all(defaultPadding),
           width: size.width * 0.5,
           decoration: BoxDecoration(
             color: bgColor,
@@ -27,7 +27,7 @@ class VariantTypeSubmitForm extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SizedBox(height: defaultPadding),
+              const SizedBox(height: defaultPadding),
               Row(
                 children: [
                   Expanded(
@@ -58,7 +58,7 @@ class VariantTypeSubmitForm extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: defaultPadding * 2),
+              const SizedBox(height: defaultPadding * 2),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -70,23 +70,27 @@ class VariantTypeSubmitForm extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(context).pop(); // Close the popup
                     },
-                    child: Text('Cancel'),
+                    child: const Text('Cancel'),
                   ),
-                  SizedBox(width: defaultPadding),
+                  const SizedBox(width: defaultPadding),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
-                      backgroundColor: primaryColor,
+                      backgroundColor: const Color.fromARGB(255, 66, 188, 205),
                     ),
                     onPressed: () {
                       // Validate and save the form
-                      if (context.variantTypeProvider.addVariantsTypeFormKey.currentState!.validate()) {
-                        context.variantTypeProvider.addVariantsTypeFormKey.currentState!.save();
+                      if (context.variantTypeProvider.addVariantsTypeFormKey
+                          .currentState!
+                          .validate()) {
+                        context.variantTypeProvider.addVariantsTypeFormKey
+                            .currentState!
+                            .save();
                         //TODO: should complete call submitVariantType
                         Navigator.of(context).pop();
                       }
                     },
-                    child: Text('Submit'),
+                    child: const Text('Submit'),
                   ),
                 ],
               ),
@@ -105,7 +109,11 @@ void showAddVariantsTypeForm(BuildContext context, VariantType? variantType) {
     builder: (BuildContext context) {
       return AlertDialog(
         backgroundColor: bgColor,
-        title: Center(child: Text('Add Variant Type'.toUpperCase(), style: TextStyle(color: primaryColor))),
+        title: Center(
+            child: Text('Add Variant Type'.toUpperCase(),
+                style: const TextStyle(
+                  color: Color.fromARGB(255, 66, 188, 205),
+                ))),
         content: VariantTypeSubmitForm(variantType: variantType),
       );
     },

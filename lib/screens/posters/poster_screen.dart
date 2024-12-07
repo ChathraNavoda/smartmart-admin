@@ -1,22 +1,24 @@
+import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
+
+import '../../utility/constants.dart';
 import 'components/add_poster_form.dart';
 import 'components/poster_header.dart';
 import 'components/poster_list_section.dart';
-import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
-import '../../utility/constants.dart';
-
 
 class PosterScreen extends StatelessWidget {
+  const PosterScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: SingleChildScrollView(
         primary: false,
-        padding: EdgeInsets.all(defaultPadding),
+        padding: const EdgeInsets.all(defaultPadding),
         child: Column(
           children: [
-            PosterHeader(),
-            SizedBox(height: defaultPadding),
+            const PosterHeader(),
+            const SizedBox(height: defaultPadding),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -35,7 +37,7 @@ class PosterScreen extends StatelessWidget {
                           ),
                           ElevatedButton.icon(
                             style: TextButton.styleFrom(
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                 horizontal: defaultPadding * 1.5,
                                 vertical: defaultPadding,
                               ),
@@ -43,19 +45,31 @@ class PosterScreen extends StatelessWidget {
                             onPressed: () {
                               showAddPosterForm(context, null);
                             },
-                            icon: Icon(Icons.add),
-                            label: Text("Add New"),
+                            icon: const Icon(
+                              Icons.add,
+                              color: Color.fromARGB(255, 66, 188, 205),
+                            ),
+                            label: const Text(
+                              "Add New",
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 66, 188, 205),
+                              ),
+                            ),
                           ),
-                          Gap(20),
+                          const Gap(20),
                           IconButton(
-                              onPressed: () {
-                                //TODO: should complete call getAllPosters
-                              },
-                              icon: Icon(Icons.refresh)),
+                            onPressed: () {
+                              //TODO: should complete call getAllPosters
+                            },
+                            icon: const Icon(
+                              Icons.refresh,
+                              color: Color.fromARGB(255, 66, 188, 205),
+                            ),
+                          ),
                         ],
                       ),
-                      Gap(defaultPadding),
-                      PosterListSection(),
+                      const Gap(defaultPadding),
+                      const PosterListSection(),
                     ],
                   ),
                 ),

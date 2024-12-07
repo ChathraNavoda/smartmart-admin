@@ -1,24 +1,24 @@
-import 'components/notification_header.dart';
-import 'components/notification_list_section.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+
 import '../../utility/constants.dart';
+import 'components/notification_header.dart';
+import 'components/notification_list_section.dart';
 import 'components/send_notification_form.dart';
 
-
-
-
 class NotificationScreen extends StatelessWidget {
+  const NotificationScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return  SafeArea(
+    return SafeArea(
       child: SingleChildScrollView(
         primary: false,
-        padding: EdgeInsets.all(defaultPadding),
+        padding: const EdgeInsets.all(defaultPadding),
         child: Column(
           children: [
-            NotificationHeader(),
-            Gap(defaultPadding),
+            const NotificationHeader(),
+            const Gap(defaultPadding),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -32,36 +32,44 @@ class NotificationScreen extends StatelessWidget {
                           Expanded(
                             child: Text(
                               "My Notification",
-                              style: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .titleMedium,
+                              style: Theme.of(context).textTheme.titleMedium,
                             ),
                           ),
                           ElevatedButton.icon(
                             style: TextButton.styleFrom(
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                 horizontal: defaultPadding * 1.5,
-                                vertical:
-                                defaultPadding,
+                                vertical: defaultPadding,
                               ),
                             ),
                             onPressed: () {
                               sendNotificationFormForm(context);
                             },
-                            icon: Icon(Icons.add),
-                            label: Text("Send New"),
+                            icon: const Icon(
+                              Icons.add,
+                              color: Color.fromARGB(255, 66, 188, 205),
+                            ),
+                            label: const Text(
+                              "Send New",
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 66, 188, 205),
+                              ),
+                            ),
                           ),
-                          Gap(20),
+                          const Gap(20),
                           IconButton(
-                              onPressed: () {
-                                //TODO: should complete call getAllNotifications
-                              },
-                              icon: Icon(Icons.refresh)),
+                            onPressed: () {
+                              //TODO: should complete call getAllNotifications
+                            },
+                            icon: const Icon(
+                              Icons.refresh,
+                              color: Color.fromARGB(255, 66, 188, 205),
+                            ),
+                          ),
                         ],
                       ),
-                      Gap(defaultPadding),
-                      NotificationListSection(),
+                      const Gap(defaultPadding),
+                      const NotificationListSection(),
                     ],
                   ),
                 ),

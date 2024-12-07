@@ -1,12 +1,13 @@
-import '../provider/poster_provider.dart';
-import '../../../utility/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
+
 import '../../../models/poster.dart';
 import '../../../utility/constants.dart';
+import '../../../utility/extensions.dart';
 import '../../../widgets/category_image_card.dart';
 import '../../../widgets/custom_text_field.dart';
+import '../provider/poster_provider.dart';
 
 class PosterSubmitForm extends StatelessWidget {
   final Poster? poster;
@@ -21,7 +22,7 @@ class PosterSubmitForm extends StatelessWidget {
       child: Form(
         key: context.posterProvider.addPosterFormKey,
         child: Container(
-          padding: EdgeInsets.all(defaultPadding),
+          padding: const EdgeInsets.all(defaultPadding),
           width: size.width * 0.3,
           decoration: BoxDecoration(
             color: bgColor,
@@ -30,7 +31,7 @@ class PosterSubmitForm extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Gap(defaultPadding),
+              const Gap(defaultPadding),
               Consumer<PosterProvider>(
                 builder: (context, posterProvider, child) {
                   return CategoryImageCard(
@@ -43,7 +44,7 @@ class PosterSubmitForm extends StatelessWidget {
                   );
                 },
               ),
-              Gap(defaultPadding),
+              const Gap(defaultPadding),
               CustomTextField(
                 controller: context.posterProvider.posterNameCtrl,
                 labelText: 'Poster Name',
@@ -55,7 +56,7 @@ class PosterSubmitForm extends StatelessWidget {
                   return null;
                 },
               ),
-              Gap(defaultPadding * 2),
+              const Gap(defaultPadding * 2),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -67,23 +68,25 @@ class PosterSubmitForm extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(context).pop(); // Close the popup
                     },
-                    child: Text('Cancel'),
+                    child: const Text('Cancel'),
                   ),
-                  Gap(defaultPadding),
+                  const Gap(defaultPadding),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
-                      backgroundColor: primaryColor,
+                      backgroundColor: const Color.fromARGB(255, 66, 188, 205),
                     ),
                     onPressed: () {
                       // Validate and save the form
-                      if (context.posterProvider.addPosterFormKey.currentState!.validate()) {
-                        context.posterProvider.addPosterFormKey.currentState!.save();
+                      if (context.posterProvider.addPosterFormKey.currentState!
+                          .validate()) {
+                        context.posterProvider.addPosterFormKey.currentState!
+                            .save();
                         //TODO: should complete call submitPoster
                         Navigator.of(context).pop();
                       }
                     },
-                    child: Text('Submit'),
+                    child: const Text('Submit'),
                   ),
                 ],
               ),
@@ -102,7 +105,11 @@ void showAddPosterForm(BuildContext context, Poster? poster) {
     builder: (BuildContext context) {
       return AlertDialog(
         backgroundColor: bgColor,
-        title: Center(child: Text('Add Poster'.toUpperCase(), style: TextStyle(color: primaryColor))),
+        title: Center(
+            child: Text('Add Poster'.toUpperCase(),
+                style: const TextStyle(
+                  color: Color.fromARGB(255, 66, 188, 205),
+                ))),
         content: PosterSubmitForm(poster: poster),
       );
     },
