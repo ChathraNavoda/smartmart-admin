@@ -84,6 +84,8 @@ class CategorySubmitForm extends StatelessWidget {
                         context
                             .categoryProvider.addCategoryFormKey.currentState!
                             .save();
+
+                        context.categoryProvider.addCategory();
                         //TODO: should complete call submitCategory
                         Navigator.of(context).pop();
                       }

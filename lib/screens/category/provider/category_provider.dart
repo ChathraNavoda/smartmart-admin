@@ -45,6 +45,7 @@ class CategoryProvider extends ChangeNotifier {
         if (apiResponse.success == true) {
           clearFields();
           SnackBarHelper.showSuccessSnackBar(apiResponse.message);
+          _dataProvider.getAllCategory();
         } else {
           SnackBarHelper.showErrorSnackBar(
               'Failed to add category ${apiResponse.message} !');
