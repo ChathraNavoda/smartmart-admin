@@ -78,7 +78,7 @@ class DataProvider extends ChangeNotifier {
         _allCategories = apiResponse.data ?? [];
         _filteredCategories = List.from(_allCategories);
         notifyListeners();
-        if (showSnack) SnackBarHelper.showErrorSnackBar(apiResponse.message);
+        if (showSnack) SnackBarHelper.showSuccessSnackBar(apiResponse.message);
       }
     } catch (e) {
       if (showSnack) SnackBarHelper.showErrorSnackBar(e.toString());
