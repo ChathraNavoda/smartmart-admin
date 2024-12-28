@@ -17,7 +17,7 @@ class CategorySubmitForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    //TODO: should complete call setDataForUpdateCategory
+    context.categoryProvider.setDataForUpdateCategory(category);
     return SingleChildScrollView(
       child: Form(
         key: context.categoryProvider.addCategoryFormKey,
@@ -85,7 +85,7 @@ class CategorySubmitForm extends StatelessWidget {
                             .categoryProvider.addCategoryFormKey.currentState!
                             .save();
 
-                        context.categoryProvider.addCategory();
+                        context.categoryProvider.submitCategory();
                         //TODO: should complete call submitCategory
                         Navigator.of(context).pop();
                       }
