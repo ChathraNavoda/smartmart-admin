@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:smartmartadmin/utility/extensions.dart';
 
 import '../../../utility/constants.dart';
 
@@ -19,7 +20,8 @@ class CategoryHeader extends StatelessWidget {
         const Spacer(flex: 2),
         Expanded(child: SearchField(
           onChange: (val) {
-            //TODO: should complete call filterCategories
+            print(val);
+            context.dataProvider.filterCategories(val);
           },
         )),
         const ProfileCard()
