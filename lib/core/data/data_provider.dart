@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' hide Category;
 import 'package:flutter/material.dart';
@@ -24,9 +26,8 @@ class DataProvider extends ChangeNotifier {
   List<Category> _filteredCategories = [];
   List<Category> get categories => _filteredCategories;
 
-  final List<SubCategory> _allSubCategories = [];
-  final List<SubCategory> _filteredSubCategories = [];
-
+  List<SubCategory> _allSubCategories = [];
+  List<SubCategory> _filteredSubCategories = [];
   List<SubCategory> get subCategories => _filteredSubCategories;
 
   final List<Brand> _allBrands = [];
@@ -87,6 +88,42 @@ class DataProvider extends ChangeNotifier {
     return _filteredCategories;
   }
 
+  Future<List<SubCategory>> getAllSubCategory({bool showSnack = false}) async {
+    try {
+      Response response = await service.getItems(endpointUrl: 'subCategories');
+      if (response.isOk) {
+        ApiResponse<List<SubCategory>> apiResponse =
+            ApiResponse<List<SubCategory>>.fromJson(
+          response.body,
+          (json) =>
+              (json as List).map((item) => SubCategory.fromJson(item)).toList(),
+        );
+        _allSubCategories = apiResponse.data ?? [];
+        _filteredSubCategories = List.from(_allSubCategories);
+        notifyListeners();
+        if (showSnack) {
+          SnackBarHelper.showSuccessSnackBar(apiResponse.message);
+        }
+      }
+    } catch (e) {
+      if (showSnack) SnackBarHelper.showErrorSnackBar(e.toString());
+      rethrow;
+    }
+    return _filteredSubCategories;
+  }
+
+  void filterSubCategories(String keyword) {
+    if (keyword.isEmpty) {
+      _filteredSubCategories = List.from(_allSubCategories);
+    } else {
+      final lowerkeyword = keyword.toLowerCase();
+      _filteredSubCategories = _allSubCategories.where((subCategory) {
+        return (subCategory.name ?? '').toLowerCase().contains(lowerkeyword);
+      }).toList();
+    }
+    notifyListeners();
+  }
+
   void filterCategories(String keyword) {
     if (keyword.isEmpty) {
       _filteredCategories = List.from(_allCategories);
@@ -96,10 +133,6 @@ class DataProvider extends ChangeNotifier {
         return (category.name ?? '').toLowerCase().contains(lowerKeyword);
       }).toList();
     }
-
-    //TODO: should complete getAllSubCategory
-
-    //TODO: should complete filterSubCategories
 
     //TODO: should complete getAllBrands
 

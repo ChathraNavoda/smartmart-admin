@@ -20,7 +20,6 @@ class CategoryHeader extends StatelessWidget {
         const Spacer(flex: 2),
         Expanded(child: SearchField(
           onChange: (val) {
-            print(val);
             context.dataProvider.filterCategories(val);
           },
         )),
