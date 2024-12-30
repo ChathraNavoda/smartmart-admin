@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:smartmartadmin/utility/extensions.dart';
 
 import '../../../core/data/data_provider.dart';
 import '../../../models/variant_type.dart';
@@ -61,7 +62,8 @@ class VariantsTypeListSection extends StatelessWidget {
                             context, dataProvider.variantTypes[index]);
                       },
                       delete: () {
-                        //context.variantTypeProvider.
+                        context.variantTypeProvider.deleteVariantType(
+                            dataProvider.variantTypes[index]);
                       },
                     ),
                   ),

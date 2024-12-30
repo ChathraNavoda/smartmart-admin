@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:get/get_connect/http/src/response/response.dart';
 
 import '../../../core/data/data_provider.dart';
 import '../../../models/api_response.dart';
@@ -78,25 +79,26 @@ class VariantsTypeProvider extends ChangeNotifier {
     }
   }
 
-  // deleteVariantType(VariantType variantType) async {
-  //   try {
-  //     Response response = await service.deleteItem(
-  //         endpointUrl: 'variantTypes', itemId: variantType.sId ?? '');
-  //     if (response.isOk) {
-  //       ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
-  //       if (apiResponse.success == true) {
-  //         SnackBarHelper.showSuccessSnackBar('Variant Type deleted successfully!');
-  //         _dataProvider.getAllVariantType();
-  //       }
-  //     } else {
-  //       SnackBarHelper.showErrorSnackBar(
-  //           'Error ${response.body?['message'] ?? response.statusText}');
-  //     }
-  //   } catch (e) {
-  //     print(e);
-  //     rethrow;
-  //   }
-  // }
+  deleteVariantType(VariantType variantType) async {
+    try {
+      Response response = await service.deleteItem(
+          endpointUrl: 'variantTypes', itemId: variantType.sId ?? '');
+      if (response.isOk) {
+        ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
+        if (apiResponse.success == true) {
+          SnackBarHelper.showSuccessSnackBar(
+              'Variant Type deleted successfully!');
+          _dataProvider.getAllVariantType();
+        }
+      } else {
+        SnackBarHelper.showErrorSnackBar(
+            'Error ${response.body?['message'] ?? response.statusText}');
+      }
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
 
   submitVariantType() {
     if (variantTypeForUpdate != null) {
