@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:smartmartadmin/utility/extensions.dart';
 
 import '../../../core/data/data_provider.dart';
 import '../../../models/brand.dart';
@@ -57,8 +58,8 @@ class BrandListSection extends StatelessWidget {
                         dataProvider.brands[index], index + 1, edit: () {
                       showBrandForm(context, dataProvider.brands[index]);
                     }, delete: () {
-                      //context.brandProvider
-                      // .deleteBrand(dataProvider.brands[index]);
+                      context.brandProvider
+                          .deleteBrand(dataProvider.brands[index]);
                     }),
                   ),
                 );

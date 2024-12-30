@@ -79,6 +79,26 @@ class BrandProvider extends ChangeNotifier {
     }
   }
 
+  deleteBrand(Brand brand) async {
+    try {
+      Response response = await service.deleteItem(
+          endpointUrl: 'brands', itemId: brand.sId ?? '');
+      if (response.isOk) {
+        ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
+        if (apiResponse.success == true) {
+          SnackBarHelper.showSuccessSnackBar('Brand deleted successfully!');
+          _dataProvider.getAllBrands();
+        }
+      } else {
+        SnackBarHelper.showErrorSnackBar(
+            'Error ${response.body?['message'] ?? response.statusText}');
+      }
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
   submitBrand() {
     if (brandForUpdate != null) {
       updateBrand();
