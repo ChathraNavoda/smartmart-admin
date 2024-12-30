@@ -1,6 +1,5 @@
-import 'dart:developer';
 import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
+
 import '../../../core/data/data_provider.dart';
 import '../../../models/api_response.dart';
 import '../../../models/variant_type.dart';
@@ -17,21 +16,95 @@ class VariantsTypeProvider extends ChangeNotifier {
 
   VariantType? variantTypeForUpdate;
 
-
-
   VariantsTypeProvider(this._dataProvider);
 
+  addVariantType() async {
+    try {
+      Map<String, dynamic> variantType = {
+        'name': variantNameCtrl.text,
+        'type': variantTypeCtrl.text
+      };
+      final response = await service.addItem(
+          endpointUrl: 'variantTypes', itemData: variantType);
+      if (response.isOk) {
+        ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
+        if (apiResponse.success == true) {
+          clearFields();
+          SnackBarHelper.showSuccessSnackBar(apiResponse.message);
+          _dataProvider.getAllVariantType();
+        } else {
+          SnackBarHelper.showErrorSnackBar(
+              'Failed to add Sub Category:${apiResponse.message} ');
+        }
+      } else {
+        SnackBarHelper.showErrorSnackBar(
+            'Error ${response.body?['message'] ?? response.statusText}');
+      }
+    } catch (e) {
+      SnackBarHelper.showErrorSnackBar('An error occurred: $e');
+    }
+  }
 
-  //TODO: should complete addVariantType
+  updateVariantType() async {
+    try {
+      if (variantTypeForUpdate != null) {
+        Map<String, dynamic> variantType = {
+          'name': variantNameCtrl.text,
+          'type': variantTypeCtrl.text
+        };
+        final response = await service.updateItem(
+            endpointUrl: 'variantTypes',
+            itemId: variantTypeForUpdate?.sId ?? '',
+            itemData: variantType);
+        if (response.isOk) {
+          ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
+          if (apiResponse.success == true) {
+            clearFields();
+            SnackBarHelper.showSuccessSnackBar(apiResponse.message);
+            _dataProvider.getAllVariantType();
+          } else {
+            SnackBarHelper.showErrorSnackBar(
+                'Failed to add sub category ${apiResponse.message} !');
+          }
+        } else {
+          SnackBarHelper.showErrorSnackBar(
+              'Error ${response.body?['message'] ?? response.statusText}');
+        }
+      }
+    } catch (e) {
+      print(e);
+      SnackBarHelper.showErrorSnackBar('An error occurred : $e!');
+      rethrow;
+    }
+  }
 
+  // deleteVariantType(VariantType variantType) async {
+  //   try {
+  //     Response response = await service.deleteItem(
+  //         endpointUrl: 'variantTypes', itemId: variantType.sId ?? '');
+  //     if (response.isOk) {
+  //       ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
+  //       if (apiResponse.success == true) {
+  //         SnackBarHelper.showSuccessSnackBar('Variant Type deleted successfully!');
+  //         _dataProvider.getAllVariantType();
+  //       }
+  //     } else {
+  //       SnackBarHelper.showErrorSnackBar(
+  //           'Error ${response.body?['message'] ?? response.statusText}');
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //     rethrow;
+  //   }
+  // }
 
-  //TODO: should complete updateVariantType
-
-
-  //TODO: should complete submitVariantType
-
-  //TODO: should complete deleteVariantType
-
+  submitVariantType() {
+    if (variantTypeForUpdate != null) {
+      updateVariantType();
+    } else {
+      addVariantType();
+    }
+  }
 
   setDataForUpdateVariantTYpe(VariantType? variantType) {
     if (variantType != null) {

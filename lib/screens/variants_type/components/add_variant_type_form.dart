@@ -86,7 +86,7 @@ class VariantTypeSubmitForm extends StatelessWidget {
                         context.variantTypeProvider.addVariantsTypeFormKey
                             .currentState!
                             .save();
-                        //TODO: should complete call submitVariantType
+                        context.variantTypeProvider.submitVariantType();
                         Navigator.of(context).pop();
                       }
                     },

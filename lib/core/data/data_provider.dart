@@ -34,8 +34,8 @@ class DataProvider extends ChangeNotifier {
   List<Brand> _filteredBrands = [];
   List<Brand> get brands => _filteredBrands;
 
-  final List<VariantType> _allVariantTypes = [];
-  final List<VariantType> _filteredVariantTypes = [];
+  List<VariantType> _allVariantTypes = [];
+  List<VariantType> _filteredVariantTypes = [];
   List<VariantType> get variantTypes => _filteredVariantTypes;
 
   final List<Variant> _allVariants = [];
@@ -135,6 +135,42 @@ class DataProvider extends ChangeNotifier {
       rethrow;
     }
     return _filteredBrands;
+  }
+
+  Future<List<VariantType>> getAllVariantType({bool showSnack = false}) async {
+    try {
+      Response response = await service.getItems(endpointUrl: 'variantTypes');
+      if (response.isOk) {
+        ApiResponse<List<VariantType>> apiResponse =
+            ApiResponse<List<VariantType>>.fromJson(
+          response.body,
+          (json) =>
+              (json as List).map((item) => VariantType.fromJson(item)).toList(),
+        );
+        _allVariantTypes = apiResponse.data ?? [];
+        _filteredVariantTypes = List.from(_allVariantTypes);
+        notifyListeners();
+        if (showSnack) {
+          SnackBarHelper.showSuccessSnackBar(apiResponse.message);
+        }
+      }
+    } catch (e) {
+      if (showSnack) SnackBarHelper.showErrorSnackBar(e.toString());
+      rethrow;
+    }
+    return _filteredVariantTypes;
+  }
+
+  void filterVariantTypes(String keyword) {
+    if (keyword.isEmpty) {
+      _filteredVariantTypes = List.from(_allVariantTypes);
+    } else {
+      final lowerkeyword = keyword.toLowerCase();
+      _filteredVariantTypes = _allVariantTypes.where((variantType) {
+        return (variantType.name ?? '').toLowerCase().contains(lowerkeyword);
+      }).toList();
+    }
+    notifyListeners();
   }
 
   void filterBrands(String keyword) {
