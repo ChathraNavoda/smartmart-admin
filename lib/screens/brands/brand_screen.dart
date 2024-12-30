@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:smartmartadmin/utility/extensions.dart';
 
 import '../../utility/constants.dart';
 import 'components/add_brand_form.dart';
@@ -58,7 +59,10 @@ class BrandScreen extends StatelessWidget {
                           ),
                           const Gap(20),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              context.dataProvider
+                                  .getAllBrands(showSnack: true);
+                            },
                             icon: const Icon(
                               Icons.refresh,
                               color: Color.fromARGB(255, 66, 188, 205),
