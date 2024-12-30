@@ -87,6 +87,27 @@ class SubCategoryProvider extends ChangeNotifier {
     }
   }
 
+  deleteSubCategory(SubCategory subCategory) async {
+    try {
+      Response response = await service.deleteItem(
+          endpointUrl: 'subCategories', itemId: subCategory.sId ?? '');
+      if (response.isOk) {
+        ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
+        if (apiResponse.success == true) {
+          SnackBarHelper.showSuccessSnackBar(
+              'Sub category deleted successfully!');
+          _dataProvider.getAllSubCategory();
+        }
+      } else {
+        SnackBarHelper.showErrorSnackBar(
+            'Error ${response.body?['message'] ?? response.statusText}');
+      }
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
   setDataForUpdateSubCategory(SubCategory? subCategory) {
     if (subCategory != null) {
       subCategoryForUpdate = subCategory;
