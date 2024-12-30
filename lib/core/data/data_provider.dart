@@ -38,8 +38,8 @@ class DataProvider extends ChangeNotifier {
   List<VariantType> _filteredVariantTypes = [];
   List<VariantType> get variantTypes => _filteredVariantTypes;
 
-  final List<Variant> _allVariants = [];
-  final List<Variant> _filteredVariants = [];
+  List<Variant> _allVariants = [];
+  List<Variant> _filteredVariants = [];
   List<Variant> get variants => _filteredVariants;
 
   final List<Product> _allProducts = [];
@@ -67,6 +67,7 @@ class DataProvider extends ChangeNotifier {
     getAllSubCategory();
     getAllBrands();
     getAllVariantType();
+    getAllVariant();
   }
 
   Future<List<Category>> getAllCategory({bool showSnack = false}) async {
@@ -162,6 +163,42 @@ class DataProvider extends ChangeNotifier {
     return _filteredVariantTypes;
   }
 
+  Future<List<Variant>> getAllVariant({bool showSnack = false}) async {
+    try {
+      Response response = await service.getItems(endpointUrl: 'variants');
+      if (response.isOk) {
+        ApiResponse<List<Variant>> apiResponse =
+            ApiResponse<List<Variant>>.fromJson(
+          response.body,
+          (json) =>
+              (json as List).map((item) => Variant.fromJson(item)).toList(),
+        );
+        _allVariants = apiResponse.data ?? [];
+        _filteredVariants = List.from(_allVariants);
+        notifyListeners();
+        if (showSnack) {
+          SnackBarHelper.showSuccessSnackBar(apiResponse.message);
+        }
+      }
+    } catch (e) {
+      if (showSnack) SnackBarHelper.showErrorSnackBar(e.toString());
+      rethrow;
+    }
+    return _filteredVariants;
+  }
+
+  void filterVariants(String keyword) {
+    if (keyword.isEmpty) {
+      _filteredVariants = List.from(_allVariants);
+    } else {
+      final lowerkeyword = keyword.toLowerCase();
+      _filteredVariants = _allVariants.where((variants) {
+        return (variants.name ?? '').toLowerCase().contains(lowerkeyword);
+      }).toList();
+    }
+    notifyListeners();
+  }
+
   void filterVariantTypes(String keyword) {
     if (keyword.isEmpty) {
       _filteredVariantTypes = List.from(_allVariantTypes);
@@ -207,14 +244,6 @@ class DataProvider extends ChangeNotifier {
         return (category.name ?? '').toLowerCase().contains(lowerKeyword);
       }).toList();
     }
-
-    //TODO: should complete getAllBrands
-
-    //TODO: should complete filterBrands
-
-    //TODO: should complete getAllVariantType
-
-    //TODO: should complete filterVariantTypes
 
     //TODO: should complete getAllVariant
 
