@@ -100,7 +100,7 @@ class BrandSubmitForm extends StatelessWidget {
                           .validate()) {
                         context.brandProvider.addBrandFormKey.currentState!
                             .save();
-                        //TODO: should complete call submitBrand
+                        context.brandProvider.submitBrand();
                         Navigator.of(context).pop();
                       }
                     },

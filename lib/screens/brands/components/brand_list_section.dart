@@ -1,23 +1,24 @@
-import '../../../core/data/data_provider.dart';
-import 'add_brand_form.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../../core/data/data_provider.dart';
+import '../../../models/brand.dart';
 import '../../../utility/color_list.dart';
 import '../../../utility/constants.dart';
-import '../../../models/brand.dart';
+import 'add_brand_form.dart';
 
 class BrandListSection extends StatelessWidget {
   const BrandListSection({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(defaultPadding),
-      decoration: BoxDecoration(
+      padding: const EdgeInsets.all(defaultPadding),
+      decoration: const BoxDecoration(
         color: secondaryColor,
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
+        borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,7 +34,7 @@ class BrandListSection extends StatelessWidget {
                 return DataTable(
                   columnSpacing: defaultPadding,
                   // minWidth: 600,
-                  columns: [
+                  columns: const [
                     DataColumn(
                       label: Text("Brands Name"),
                     ),
@@ -52,10 +53,12 @@ class BrandListSection extends StatelessWidget {
                   ],
                   rows: List.generate(
                     dataProvider.brands.length,
-                    (index) => brandDataRow(dataProvider.brands[index], index + 1, edit: () {
+                    (index) => brandDataRow(
+                        dataProvider.brands[index], index + 1, edit: () {
                       showBrandForm(context, dataProvider.brands[index]);
                     }, delete: () {
-                      //TODO: should complete deleteBrand
+                      //context.brandProvider
+                      // .deleteBrand(dataProvider.brands[index]);
                     }),
                   ),
                 );
@@ -68,7 +71,8 @@ class BrandListSection extends StatelessWidget {
   }
 }
 
-DataRow brandDataRow(Brand brandInfo, int index, {Function? edit, Function? delete}) {
+DataRow brandDataRow(Brand brandInfo, int index,
+    {Function? edit, Function? delete}) {
   return DataRow(
     cells: [
       DataCell(
@@ -96,7 +100,7 @@ DataRow brandDataRow(Brand brandInfo, int index, {Function? edit, Function? dele
           onPressed: () {
             if (edit != null) edit();
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.edit,
             color: Colors.white,
           ))),
@@ -104,7 +108,7 @@ DataRow brandDataRow(Brand brandInfo, int index, {Function? edit, Function? dele
           onPressed: () {
             if (delete != null) delete();
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.delete,
             color: Colors.red,
           ))),

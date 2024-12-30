@@ -30,8 +30,8 @@ class DataProvider extends ChangeNotifier {
   List<SubCategory> _filteredSubCategories = [];
   List<SubCategory> get subCategories => _filteredSubCategories;
 
-  final List<Brand> _allBrands = [];
-  final List<Brand> _filteredBrands = [];
+  List<Brand> _allBrands = [];
+  List<Brand> _filteredBrands = [];
   List<Brand> get brands => _filteredBrands;
 
   final List<VariantType> _allVariantTypes = [];
@@ -65,6 +65,7 @@ class DataProvider extends ChangeNotifier {
   DataProvider() {
     getAllCategory();
     getAllSubCategory();
+    getAllBrands();
   }
 
   Future<List<Category>> getAllCategory({bool showSnack = false}) async {
@@ -111,6 +112,41 @@ class DataProvider extends ChangeNotifier {
       rethrow;
     }
     return _filteredSubCategories;
+  }
+
+  Future<List<Brand>> getAllBrands({bool showSnack = false}) async {
+    try {
+      Response response = await service.getItems(endpointUrl: 'brands');
+      if (response.isOk) {
+        ApiResponse<List<Brand>> apiResponse =
+            ApiResponse<List<Brand>>.fromJson(
+          response.body,
+          (json) => (json as List).map((item) => Brand.fromJson(item)).toList(),
+        );
+        _allBrands = apiResponse.data ?? [];
+        _filteredBrands = List.from(_allBrands);
+        notifyListeners();
+        if (showSnack) {
+          SnackBarHelper.showSuccessSnackBar(apiResponse.message);
+        }
+      }
+    } catch (e) {
+      if (showSnack) SnackBarHelper.showErrorSnackBar(e.toString());
+      rethrow;
+    }
+    return _filteredBrands;
+  }
+
+  void filterBrands(String keyword) {
+    if (keyword.isEmpty) {
+      _filteredBrands = List.from(_allBrands);
+    } else {
+      final lowerkeyword = keyword.toLowerCase();
+      _filteredBrands = _allBrands.where((brand) {
+        return (brand.name ?? '').toLowerCase().contains(lowerkeyword);
+      }).toList();
+    }
+    notifyListeners();
   }
 
   void filterSubCategories(String keyword) {
