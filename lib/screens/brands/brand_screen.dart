@@ -58,9 +58,7 @@ class BrandScreen extends StatelessWidget {
                           ),
                           const Gap(20),
                           IconButton(
-                            onPressed: () {
-                              //TODO: should complete call getAllBrands
-                            },
+                            onPressed: () {},
                             icon: const Icon(
                               Icons.refresh,
                               color: Color.fromARGB(255, 66, 188, 205),

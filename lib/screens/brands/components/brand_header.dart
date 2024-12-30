@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:smartmartadmin/utility/extensions.dart';
 
 import '../../../utility/constants.dart';
 
@@ -19,7 +20,7 @@ class BrandHeader extends StatelessWidget {
         const Spacer(flex: 2),
         Expanded(child: SearchField(
           onChange: (val) {
-            //TODO: should complete call filterBrands
+            context.dataProvider.filterBrands(val);
           },
         )),
         const ProfileCard()
