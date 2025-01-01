@@ -173,7 +173,16 @@ class DashBoardProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  //TODO: should complete filterBrand
+  filterBrand(SubCategory subCategory) {
+    selectedBrand = null;
+    selectedSubCategory = subCategory;
+    brandsBySubCategory.clear();
+    final newList = _dataProvider.brands
+        .where((brand) => brand.subcategoryId?.sId == subCategory.sId)
+        .toList();
+    brandsBySubCategory = newList;
+    notifyListeners();
+  }
 
   //TODO: should complete filterVariant
 
