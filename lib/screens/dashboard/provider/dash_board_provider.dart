@@ -184,7 +184,17 @@ class DashBoardProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  //TODO: should complete filterVariant
+  filterVariant(VariantType variantType) {
+    selectedVariants = [];
+    selectedVariantType = variantType;
+    final newList = _dataProvider.variants
+        .where((variant) => variant.variantTypeId?.sId == variantType.sId)
+        .toList();
+    final List<String> variantNames =
+        newList.map((variant) => variant.name ?? '').toList();
+    variantsByVariantType = variantNames;
+    notifyListeners();
+  }
 
   setDataForUpdateProduct(Product? product) {
     if (product != null) {
