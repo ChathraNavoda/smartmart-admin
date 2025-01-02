@@ -210,6 +210,43 @@ class DataProvider extends ChangeNotifier {
     }
   }
 
+  void filterProductsByQuantity(String productQntType) {
+    if (productQntType == 'All product') {
+      _filteredProducts = List.from(_allProducts);
+    } else if (productQntType == 'Out of Stock') {
+      _filteredProducts = _allProducts.where((product) {
+        return product.quantity != null && product.quantity == 0;
+      }).toList();
+    } else if (productQntType == 'Limited Stock') {
+      _filteredProducts = _allProducts.where((product) {
+        return product.quantity != null && product.quantity == 1;
+      }).toList();
+    } else if (productQntType == 'Other Stock') {
+      _filteredProducts = _allProducts.where((product) {
+        return product.quantity != null &&
+            product.quantity != 0 &&
+            product.quantity != 1;
+      }).toList();
+    } else {
+      _filteredProducts = List.from(_allProducts);
+    }
+    notifyListeners();
+  }
+
+  int calculateProductWithQuantity({int? quantity}) {
+    int totalOrders = 0;
+    if (quantity == null) {
+      totalOrders = _allProducts.length;
+    } else {
+      for (Product product in _allProducts) {
+        if (product.quantity != null && product.quantity == quantity) {
+          totalOrders += 1;
+        }
+      }
+    }
+    return totalOrders;
+  }
+
   void filterProducts(String keyword) {
     if (keyword.isEmpty) {
       _filteredProducts = List.from(_allProducts);
@@ -319,9 +356,5 @@ class DataProvider extends ChangeNotifier {
     //TODO: should complete filterOrders
 
     //TODO: should complete calculateOrdersWithStatus
-
-    //TODO: should complete filterProductsByQuantity
-
-    //TODO: should complete calculateProductWithQuantity
   }
 }
