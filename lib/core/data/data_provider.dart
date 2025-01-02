@@ -50,8 +50,8 @@ class DataProvider extends ChangeNotifier {
   final List<Coupon> _filteredCoupons = [];
   List<Coupon> get coupons => _filteredCoupons;
 
-  final List<Poster> _allPosters = [];
-  final List<Poster> _filteredPosters = [];
+  List<Poster> _allPosters = [];
+  List<Poster> _filteredPosters = [];
   List<Poster> get posters => _filteredPosters;
 
   final List<Order> _allOrders = [];
@@ -69,6 +69,7 @@ class DataProvider extends ChangeNotifier {
     getAllBrands();
     getAllVariantType();
     getAllVariant();
+    getAllPosters();
   }
 
   Future<List<Category>> getAllCategory({bool showSnack = false}) async {
@@ -210,6 +211,30 @@ class DataProvider extends ChangeNotifier {
     }
   }
 
+  Future<List<Poster>> getAllPosters({bool showSnack = false}) async {
+    try {
+      Response response = await service.getItems(endpointUrl: 'posters');
+      if (response.isOk) {
+        ApiResponse<List<Poster>> apiResponse =
+            ApiResponse<List<Poster>>.fromJson(
+          response.body,
+          (json) =>
+              (json as List).map((item) => Poster.fromJson(item)).toList(),
+        );
+        _allPosters = apiResponse.data ?? [];
+        _filteredPosters = List.from(_allPosters);
+        notifyListeners();
+        if (showSnack) {
+          SnackBarHelper.showSuccessSnackBar(apiResponse.message);
+        }
+      }
+    } catch (e) {
+      if (showSnack) SnackBarHelper.showErrorSnackBar(e.toString());
+      rethrow;
+    }
+    return _filteredPosters;
+  }
+
   void filterProductsByQuantity(String productQntType) {
     if (productQntType == 'All product') {
       _filteredProducts = List.from(_allProducts);
@@ -245,6 +270,18 @@ class DataProvider extends ChangeNotifier {
       }
     }
     return totalOrders;
+  }
+
+  void filterPosters(String keyword) {
+    if (keyword.isEmpty) {
+      _filteredPosters = List.from(_allPosters);
+    } else {
+      final lowerkeyword = keyword.toLowerCase();
+      _filteredPosters = _allPosters.where((poster) {
+        return (poster.posterName ?? '').toLowerCase().contains(lowerkeyword);
+      }).toList();
+    }
+    notifyListeners();
   }
 
   void filterProducts(String keyword) {
