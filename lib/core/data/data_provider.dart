@@ -42,8 +42,8 @@ class DataProvider extends ChangeNotifier {
   List<Variant> _filteredVariants = [];
   List<Variant> get variants => _filteredVariants;
 
-  final List<Product> _allProducts = [];
-  final List<Product> _filteredProducts = [];
+  List<Product> _allProducts = [];
+  List<Product> _filteredProducts = [];
   List<Product> get products => _filteredProducts;
 
   final List<Coupon> _allCoupons = [];
@@ -63,6 +63,7 @@ class DataProvider extends ChangeNotifier {
   List<MyNotification> get notifications => _filteredNotifications;
 
   DataProvider() {
+    getAllProduct();
     getAllCategory();
     getAllSubCategory();
     getAllBrands();
@@ -185,6 +186,54 @@ class DataProvider extends ChangeNotifier {
       rethrow;
     }
     return _filteredVariants;
+  }
+
+  Future<void> getAllProduct({bool showSnack = false}) async {
+    try {
+      Response response = await service.getItems(endpointUrl: 'products');
+      if (response.isOk) {
+        ApiResponse<List<Product>> apiResponse =
+            ApiResponse<List<Product>>.fromJson(
+          response.body,
+          (json) =>
+              (json as List).map((item) => Product.fromJson(item)).toList(),
+        );
+        _allProducts = apiResponse.data ?? [];
+        _filteredProducts = List.from(_allProducts);
+        notifyListeners();
+        if (showSnack) {
+          SnackBarHelper.showSuccessSnackBar(apiResponse.message);
+        }
+      }
+    } catch (e) {
+      if (showSnack) SnackBarHelper.showErrorSnackBar(e.toString());
+    }
+  }
+
+  void filterProducts(String keyword) {
+    if (keyword.isEmpty) {
+      _filteredProducts = List.from(_allProducts);
+    } else {
+      final lowerkeyword = keyword.toLowerCase();
+      _filteredProducts = _allProducts.where((product) {
+        final productNameContainsKeyword =
+            (product.name ?? '').toLowerCase().contains(lowerkeyword);
+
+        final categoryNameContainsKeyword = product.proSubCategoryId?.name
+                ?.toLowerCase()
+                .contains(lowerkeyword) ??
+            false;
+
+        final subCategoryNameContainsKeyword = product.proSubCategoryId?.name
+                ?.toLowerCase()
+                .contains(lowerkeyword) ??
+            false;
+        return productNameContainsKeyword ||
+            categoryNameContainsKeyword ||
+            subCategoryNameContainsKeyword;
+      }).toList();
+    }
+    notifyListeners();
   }
 
   void filterVariants(String keyword) {

@@ -88,6 +88,7 @@ class DashBoardProvider extends ChangeNotifier {
         if (apiResponse.success == true) {
           clearFields();
           SnackBarHelper.showSuccessSnackBar(apiResponse.message);
+          _dataProvider.getAllProduct();
           clearFields();
         } else {
           SnackBarHelper.showErrorSnackBar(
@@ -102,8 +103,6 @@ class DashBoardProvider extends ChangeNotifier {
       rethrow;
     }
   }
-
-  //TODO: should complete updateProduct
 
   //TODO: should complete submitProduct
 
