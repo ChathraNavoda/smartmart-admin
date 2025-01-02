@@ -340,7 +340,8 @@ class ProductSubmitForm extends StatelessWidget {
                             .dashBoardProvider.addProductFormKey.currentState!
                             .save();
 
-                        context.dashBoardProvider.addProduct();
+                        context.dashBoardProvider.submitProduct();
+
                         Navigator.of(context).pop();
                       }
                     },
