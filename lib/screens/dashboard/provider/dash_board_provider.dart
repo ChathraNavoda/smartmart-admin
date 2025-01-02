@@ -60,7 +60,7 @@ class DashBoardProvider extends ChangeNotifier {
       }
       Map<String, dynamic> formDataMap = {
         'name': productNameCtrl.text,
-        'description': productDescCtrl,
+        'description': productDescCtrl.text,
         'proCategoryId': selectedCategory?.sId ?? '',
         'proSubCategoryId': selectedSubCategory?.sId ?? '',
         'proBrandId': selectedBrand?.sId ?? '',
@@ -69,7 +69,8 @@ class DashBoardProvider extends ChangeNotifier {
             ? productPriceCtrl.text
             : productOffPriceCtrl.text,
         'quantity': productQntCtrl.text,
-        'proVariantTypeId': selectedVariantType?.sId
+        'proVariantTypeId': selectedVariantType?.sId,
+        'proVariantId': selectedVariants
       };
       final FormData form = await createFormDataForMultipleImage(imgXFiles: [
         {'image1': mainImgXFile},
@@ -90,7 +91,7 @@ class DashBoardProvider extends ChangeNotifier {
           clearFields();
         } else {
           SnackBarHelper.showErrorSnackBar(
-              'Failed to add Sub Products:${apiResponse.message} ');
+              'Failed to add Products:${apiResponse.message} ');
         }
       } else {
         SnackBarHelper.showErrorSnackBar(
@@ -98,6 +99,7 @@ class DashBoardProvider extends ChangeNotifier {
       }
     } catch (e) {
       SnackBarHelper.showErrorSnackBar('An error occurred: $e');
+      rethrow;
     }
   }
 
