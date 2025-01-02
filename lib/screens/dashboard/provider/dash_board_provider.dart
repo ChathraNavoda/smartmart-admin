@@ -162,7 +162,25 @@ class DashBoardProvider extends ChangeNotifier {
     }
   }
 
-  //TODO: should complete deleteProduct
+  deleteProduct(Product product) async {
+    try {
+      Response response = await service.deleteItem(
+          endpointUrl: 'products', itemId: product.sId ?? '');
+      if (response.isOk) {
+        ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
+        if (apiResponse.success == true) {
+          SnackBarHelper.showSuccessSnackBar('Category deleted successfully!');
+          _dataProvider.getAllProduct();
+        }
+      } else {
+        SnackBarHelper.showErrorSnackBar(
+            'Error ${response.body?['message'] ?? response.statusText}');
+      }
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
 
   void pickImage({required int imageCardNumber}) async {
     final ImagePicker picker = ImagePicker();
