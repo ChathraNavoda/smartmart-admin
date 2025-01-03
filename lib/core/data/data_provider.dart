@@ -46,8 +46,8 @@ class DataProvider extends ChangeNotifier {
   List<Product> _filteredProducts = [];
   List<Product> get products => _filteredProducts;
 
-  final List<Coupon> _allCoupons = [];
-  final List<Coupon> _filteredCoupons = [];
+  List<Coupon> _allCoupons = [];
+  List<Coupon> _filteredCoupons = [];
   List<Coupon> get coupons => _filteredCoupons;
 
   List<Poster> _allPosters = [];
@@ -70,6 +70,7 @@ class DataProvider extends ChangeNotifier {
     getAllVariantType();
     getAllVariant();
     getAllPosters();
+    getAllCoupons();
   }
 
   Future<List<Category>> getAllCategory({bool showSnack = false}) async {
@@ -235,6 +236,30 @@ class DataProvider extends ChangeNotifier {
     return _filteredPosters;
   }
 
+  Future<List<Coupon>> getAllCoupons({bool showSnack = false}) async {
+    try {
+      Response response = await service.getItems(endpointUrl: 'couponCodes');
+      if (response.isOk) {
+        ApiResponse<List<Coupon>> apiResponse =
+            ApiResponse<List<Coupon>>.fromJson(
+          response.body,
+          (json) =>
+              (json as List).map((item) => Coupon.fromJson(item)).toList(),
+        );
+        _allCoupons = apiResponse.data ?? [];
+        _filteredCoupons = List.from(_allCoupons);
+        notifyListeners();
+        if (showSnack) {
+          SnackBarHelper.showSuccessSnackBar(apiResponse.message);
+        }
+      }
+    } catch (e) {
+      if (showSnack) SnackBarHelper.showErrorSnackBar(e.toString());
+      rethrow;
+    }
+    return _filteredCoupons;
+  }
+
   void filterProductsByQuantity(String productQntType) {
     if (productQntType == 'All product') {
       _filteredProducts = List.from(_allProducts);
@@ -270,6 +295,18 @@ class DataProvider extends ChangeNotifier {
       }
     }
     return totalOrders;
+  }
+
+  void filterCoupons(String keyword) {
+    if (keyword.isEmpty) {
+      _filteredCoupons = List.from(_allCoupons);
+    } else {
+      final lowerkeyword = keyword.toLowerCase();
+      _filteredCoupons = _allCoupons.where((coupon) {
+        return (coupon.couponCode ?? '').toLowerCase().contains(lowerkeyword);
+      }).toList();
+    }
+    notifyListeners();
   }
 
   void filterPosters(String keyword) {
@@ -367,22 +404,6 @@ class DataProvider extends ChangeNotifier {
         return (category.name ?? '').toLowerCase().contains(lowerKeyword);
       }).toList();
     }
-
-    //TODO: should complete getAllVariant
-
-    //TODO: should complete filterVariants
-
-    //TODO: should complete getAllProduct
-
-    //TODO: should complete filterProducts
-
-    //TODO: should complete getAllCoupons
-
-    //TODO: should complete filterCoupons
-
-    //TODO: should complete getAllPosters
-
-    //TODO: should complete filterPosters
 
     //TODO: should complete getAllNotifications
 

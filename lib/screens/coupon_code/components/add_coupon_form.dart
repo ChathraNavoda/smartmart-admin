@@ -242,7 +242,7 @@ class CouponSubmitForm extends StatelessWidget {
                         context
                             .couponCodeProvider.addCouponFormKey.currentState!
                             .save();
-                        //TODO: should complete call  submitCoupon
+                        context.couponCodeProvider.submitCoupon();
                         Navigator.of(context).pop();
                       }
                     },

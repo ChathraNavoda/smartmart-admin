@@ -1,9 +1,12 @@
-import '../../../models/coupon.dart';
-import '../../../models/product.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:smartmartadmin/models/api_response.dart';
+import 'package:smartmartadmin/utility/snack_bar_helper.dart';
+
 import '../../../core/data/data_provider.dart';
 import '../../../models/category.dart';
+import '../../../models/coupon.dart';
+import '../../../models/product.dart';
 import '../../../models/sub_category.dart';
 import '../../../services/http_services.dart';
 
@@ -25,18 +28,115 @@ class CouponCodeProvider extends ChangeNotifier {
 
   CouponCodeProvider(this._dataProvider);
 
-  //TODO: should complete addCoupon
+  addCoupon() async {
+    try {
+      if (endDateCtrl.text.isEmpty) {
+        SnackBarHelper.showErrorSnackBar('Please select end date!');
+        return;
+      }
+      Map<String, dynamic> coupon = {
+        'couponCode': couponCodeCtrl.text,
+        'discountType': selectedDiscountType,
+        'discountAmount': discountAmountCtrl.text,
+        'minimumPurchaseAmount': minimumPurchaseAmountCtrl.text,
+        'endDate': endDateCtrl.text,
+        'status': selectedCouponStatus,
+        'applicableCategory': selectedCategory?.sId,
+        'applicableSubCategory': selectedSubCategory?.sId,
+        'applicableProduct': selectedProduct?.sId
+      };
 
+      final response =
+          await service.addItem(endpointUrl: 'couponCodes', itemData: coupon);
+      if (response.isOk) {
+        ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
+        if (apiResponse.success == true) {
+          clearFields();
+          SnackBarHelper.showSuccessSnackBar(apiResponse.message);
+          _dataProvider.getAllCoupons();
+          clearFields();
+        } else {
+          SnackBarHelper.showErrorSnackBar(
+              'Failed to add Products:${apiResponse.message} ');
+        }
+      } else {
+        SnackBarHelper.showErrorSnackBar(
+            'Error ${response.body?['message'] ?? response.statusText}');
+      }
+    } catch (e) {
+      SnackBarHelper.showErrorSnackBar('An error occurred: $e');
+      rethrow;
+    }
+  }
 
-  //TODO: should complete updateCoupon
+  updateCoupon() async {
+    try {
+      if (couponForUpdate != null) {
+        Map<String, dynamic> coupon = {
+          'couponCode': couponCodeCtrl.text,
+          'discountType': selectedDiscountType,
+          'discountAmount': discountAmountCtrl.text,
+          'minimumPurchaseAmount': minimumPurchaseAmountCtrl.text,
+          'endDate': endDateCtrl.text,
+          'status': selectedCouponStatus,
+          'applicableCategory': selectedCategory?.sId,
+          'applicableSubCategory': selectedSubCategory?.sId,
+          'applicableProduct': selectedProduct?.sId
+        };
 
+        final response = await service.updateItem(
+            endpointUrl: 'couponCodes',
+            itemData: coupon,
+            itemId: couponForUpdate?.sId ?? '');
+        if (response.isOk) {
+          ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
+          if (apiResponse.success == true) {
+            clearFields();
+            SnackBarHelper.showSuccessSnackBar(apiResponse.message);
+            _dataProvider.getAllCoupons();
+          } else {
+            SnackBarHelper.showErrorSnackBar(
+                'Failed to add Products:${apiResponse.message} ');
+          }
+        } else {
+          SnackBarHelper.showErrorSnackBar(
+              'Error ${response.body?['message'] ?? response.statusText}');
+        }
+      }
+    } catch (e) {
+      SnackBarHelper.showErrorSnackBar('An error occurred: $e');
+      rethrow;
+    }
+  }
 
-  //TODO: should complete submitCoupon
+  submitCoupon() {
+    if (couponForUpdate != null) {
+      updateCoupon();
+    } else {
+      addCoupon();
+    }
+  }
 
-
-  //TODO: should complete deleteCoupon
-
-
+  deleteCoupon(Coupon coupon) async {
+    try {
+      Response response = await service.deleteItem(
+          endpointUrl: 'couponCodes', itemId: coupon.sId ?? '');
+      if (response.isOk) {
+        ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
+        if (apiResponse.success == true) {
+          SnackBarHelper.showSuccessSnackBar(
+              'Coupon Code deleted successfully!');
+          _dataProvider.getAllCoupons();
+        }
+      } else {
+        SnackBarHelper.showErrorSnackBar(
+            'Error ${response.body?['message'] ?? response.statusText}');
+      }
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
 
   //? set data for update on editing
   setDataForUpdateCoupon(Coupon? coupon) {
@@ -48,10 +148,12 @@ class CouponCodeProvider extends ChangeNotifier {
       minimumPurchaseAmountCtrl.text = '${coupon.minimumPurchaseAmount}';
       endDateCtrl.text = '${coupon.endDate}';
       selectedCouponStatus = coupon.status ?? 'active';
-      selectedCategory = _dataProvider.categories.firstWhereOrNull((element) => element.sId == coupon.applicableCategory?.sId);
-      selectedSubCategory =
-          _dataProvider.subCategories.firstWhereOrNull((element) => element.sId == coupon.applicableSubCategory?.sId);
-      selectedProduct = _dataProvider.products.firstWhereOrNull((element) => element.sId == coupon.applicableProduct?.sId);
+      selectedCategory = _dataProvider.categories.firstWhereOrNull(
+          (element) => element.sId == coupon.applicableCategory?.sId);
+      selectedSubCategory = _dataProvider.subCategories.firstWhereOrNull(
+          (element) => element.sId == coupon.applicableSubCategory?.sId);
+      selectedProduct = _dataProvider.products.firstWhereOrNull(
+          (element) => element.sId == coupon.applicableProduct?.sId);
     } else {
       clearFields();
     }
